@@ -22,7 +22,7 @@ export function setupSocket (io:Server){
     socket.on('message', async (data) => {
       await prisma.chats.create({
         data: data
-      });
+      })
       socket.to(socket.room).emit("message", data);
     })
 
