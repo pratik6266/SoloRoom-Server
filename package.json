@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "npx prisma generate && tsc",
     "prestart": "npx prisma generate",
     "start": "node dist/index.js",
     "watch": "tsc -w",
@@ -14,7 +15,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@prisma/client": "^6.6.0",
     "@socket.io/admin-ui": "^0.5.1",
