@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  name       String      @db.VarChar(191)
+  email      String      @unique
+  provider   String
+  oauth_id   String
+  image      String?
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  ChatGroup  ChatGroup[] @relation("userChatGroup")
+
+  @@map("users")
+}
+
+model ChatGroup {
+  id         String       @id @default(uuid()) @db.Uuid
+  user       User         @relation("userChatGroup", fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    Int
+  title      String       @db.VarChar(191)
+  passcode   String       @db.VarChar(20)
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  GroupUsers GroupUsers[] @relation("chatGroupUsers")
+  chats      Chats[]      @relation("chatsOfGroup") 
+
+  @@index([user_id, created_at])
+  @@map("chat_groups")
+}
+
+model GroupUsers {
+  id         Int       @id @default(autoincrement())
+  group      ChatGroup @relation("chatGroupUsers", fields: [group_id], references: [id], onDelete: Cascade)
+  group_id   String    @db.Uuid
+  name       String
+  created_at DateTime  @default(now())
+
+  @@map("group_users")
+}
+
+model Chats {
+  id         String    @id @default(uuid()) @db.Uuid
+  group      ChatGroup @relation("chatsOfGroup", fields: [group_id], references: [id], onDelete: Cascade)
+  group_id   String    @db.Uuid
+  message    String?
+  name       String
+  created_at DateTime  @default(now())
+
+  @@index([created_at])
+  @@map("chats")
+}
