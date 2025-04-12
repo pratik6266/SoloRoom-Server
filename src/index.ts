@@ -15,7 +15,7 @@ const app: Application = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://admin.socket.io"],
+    origin: ["http://localhost:3000", "https://admin.socket.io", process.env.FRONTEND_URL],
   }, 
   adapter: createAdapter(redis),
 })  
